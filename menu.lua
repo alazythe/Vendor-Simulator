@@ -75,41 +75,45 @@ local function drawButtons(screenWidth, screenHeight)
 		local textHeight = font:getHeight(button.text)
 		local mouseX, mouseY = love.mouse.getPosition()
 
-		local hot = mouseX > buttonX
+		-- Check if hovering over button
+		if
+			mouseX > buttonX
 			and mouseX < buttonX + button.image:getWidth()
 			and mouseY > buttonY
 			and mouseY < buttonY + button.image:getHeight()
-
-		if hot then
+		then
+			-- Add padding on hover
 			buttonY = buttonY + 5
 			hoveredButton = i
-		end
 
-		button.now = love.mouse.isDown(1)
-		if button.now and not button.last and hot then
-			button.fn()
-		end
-
-		if hoveredButton and hoveredButton ~= currentButton then
-			if not soundPlayed then
-				ButtonHoverSound:stop()
-				ButtonHoverSound:play()
-				soundPlayed = true
+			-- Play sound on hover
+			if hoveredButton ~= currentButton then
+				if not soundPlayed then
+					ButtonHoverSound:stop()
+					ButtonHoverSound:play()
+					soundPlayed = true
+				end
+				currentButton = hoveredButton
 			end
-			currentButton = hoveredButton
+
+			-- Execute function on mouse click
+			button.now = love.mouse.isDown(1)
+			if button.now and not button.last and hot then
+				button.fn()
+			end
 		else
 			soundPlayed = false
 		end
 
 		love.graphics.draw(button.image, buttonX, buttonY, 0)
-		love.graphics.setShader()
+		love.graphics.setShader() -- Deactivate CRT shader because it fucks up the text
 		love.graphics.print(
 			button.text,
 			font,
 			(screenWidth * 0.5) - (textWidth * 0.5),
 			buttonY + (textHeight * 0.5) + MARGIN
 		)
-		love.graphics.setShader(crtShader)
+		love.graphics.setShader(crtShader) -- Re-activate shader
 
 		cursorY = cursorY + (button.image:getHeight() + MARGIN)
 	end
