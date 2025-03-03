@@ -90,13 +90,13 @@ function drawButtons(screenWidth, screenHeight)
 		end
 
 		if hoveredButton and hoveredButton ~= currentButton then
-			if not ButtonHoverSound:isPlaying() and not soundPlayed then
+			if not soundPlayed then
+				ButtonHoverSound:stop()
 				ButtonHoverSound:play()
 				soundPlayed = true
 			end
 			currentButton = hoveredButton
 		else
-			currentButton = nil
 			soundPlayed = false
 		end
 
