@@ -1,17 +1,16 @@
 local window = require("window.window")
-local moonshine = require("moonshine")
+local menu = require("menu")
+
+local gameState = "load"
 
 function love.load()
-	background = love.graphics.newImage("intro.png")
+	Background = love.graphics.newImage("intro.png")
 
-	effect = moonshine(moonshine.effects.filmgrain).chain(moonshine.effects.vignette)
-	effect.filmgrain.size = 2
-
-	window.Init("Showtime", true)
+	window.init("Showtime", true)
 end
 
 function love.draw()
-	local screenWidth, screenHeight = love.graphics.getDimensions()
-
-	love.graphics.draw(background, 0, 0, 0, screenWidth / background:getWidth(), screenHeight / background:getHeight())
+	if gameState == "load" then
+		menu.draw()
+	end
 end
