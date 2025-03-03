@@ -6,7 +6,6 @@ local MARGIN = 16
 
 local font = nil
 local currentButton = nil
-local soundPlayed = false
 
 local function newButton(image, text, fn)
 	return {
@@ -88,11 +87,8 @@ local function drawButtons(screenWidth, screenHeight)
 
 			-- Play sound on hover
 			if hoveredButton ~= currentButton then
-				if not soundPlayed then
-					ButtonHoverSound:stop()
-					ButtonHoverSound:play()
-					soundPlayed = true
-				end
+				ButtonHoverSound:stop()
+				ButtonHoverSound:play()
 				currentButton = hoveredButton
 			end
 
@@ -101,8 +97,6 @@ local function drawButtons(screenWidth, screenHeight)
 			if button.now and not button.last then
 				button.fn()
 			end
-		else
-			soundPlayed = false
 		end
 
 		love.graphics.draw(button.image, buttonX, buttonY, 0)
