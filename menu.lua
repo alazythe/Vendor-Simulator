@@ -13,6 +13,8 @@ local function newButton(image, text, fn)
 		image = image,
 		text = text,
 		fn = fn,
+		now = false,
+		last = false,
 	}
 end
 
@@ -32,46 +34,40 @@ local function generateButtons()
 
 	table.insert(
 		buttons,
-		newButton(MenuButton, "New Game", {
-			function()
-				print("New Game")
-			end,
-		})
+		newButton(MenuButton, "New Game", function()
+			print("New Game")
+		end)
 	)
 
 	table.insert(
 		buttons,
-		newButton(MenuButton, "Load Game", {
-			function()
-				print("Load Game")
-			end,
-		})
+		newButton(MenuButton, "Load Game", function()
+			print("Load Game")
+		end)
 	)
 
 	table.insert(
 		buttons,
-		newButton(MenuButton, "Settings", {
-			function()
-				print("Settings")
-			end,
-		})
+		newButton(MenuButton, "Settings", function()
+			print("Settings")
+		end)
 	)
 
 	table.insert(
 		buttons,
-		newButton(MenuButton, "Exit Game", {
-			function()
-				love.event.exit(0)
-			end,
-		})
+		newButton(MenuButton, "Exit Game", function()
+			love.event.quit(0)
+		end)
 	)
 end
 
-function drawButtons(screenWidth, screenHeight)
+local function drawButtons(screenWidth, screenHeight)
 	local cursorY = 0
 	local hoveredButton = nil
 
 	for i, button in ipairs(buttons) do
+		button.last = button.now
+
 		local totalHeight = (button.image:getHeight() - MARGIN) * #buttons
 		local buttonX = (screenWidth * 0.5) - (button.image:getWidth() * 0.5)
 		local buttonY = (screenHeight * 0.5) - (button.image:getHeight() * 0.5) - (totalHeight * 0.5) + cursorY
@@ -79,14 +75,19 @@ function drawButtons(screenWidth, screenHeight)
 		local textHeight = font:getHeight(button.text)
 		local mouseX, mouseY = love.mouse.getPosition()
 
-		if
-			mouseX > buttonX
+		local hot = mouseX > buttonX
 			and mouseX < buttonX + button.image:getWidth()
 			and mouseY > buttonY
 			and mouseY < buttonY + button.image:getHeight()
-		then
+
+		if hot then
 			buttonY = buttonY + 5
 			hoveredButton = i
+		end
+
+		button.now = love.mouse.isDown(1)
+		if button.now and not button.last and hot then
+			button.fn()
 		end
 
 		if hoveredButton and hoveredButton ~= currentButton then
