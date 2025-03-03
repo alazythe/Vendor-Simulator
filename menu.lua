@@ -98,7 +98,7 @@ local function drawButtons(screenWidth, screenHeight)
 
 			-- Execute function on mouse click
 			button.now = love.mouse.isDown(1)
-			if button.now and not button.last and hot then
+			if button.now and not button.last then
 				button.fn()
 			end
 		else
